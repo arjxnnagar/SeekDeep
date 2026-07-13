@@ -14,7 +14,6 @@ export async function POST(req){
       "svix-signature": headerPayload.get("svix-signature"),
     };
 
-
     const payload = await req.json();
     const body = JSON.stringify(payload);
     const {data,type} = wh.verify(body,svixHeaders);
@@ -23,7 +22,7 @@ export async function POST(req){
     const userData = {
         _id:data.id,
         email:data.email_addresses[0].email_address,
-        name:`{${data.first_name} ${data.last_name}`,
+        name:`{${data.first_name} ${data.last_name}}`,
         image:data.image_url,
     }
     await connectDB();
@@ -35,7 +34,7 @@ export async function POST(req){
       case "user.updated":
         await User.findByIdAndUpdate(data.id,userData);
         break;
-      case "user.created":
+      case "user.deleted":
         await User.findByIdAndDelete(data.id);
         break;
       default:
